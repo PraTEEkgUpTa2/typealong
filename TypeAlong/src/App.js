@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './index.css'
+import { Button } from 'react-bootstrap';
+import Card from 'react-bootstrap/Card';
 
+import Table from 'react-bootstrap/Table';
 const NUMB_OF_WORDS = 20;
 const SECONDS = 60;
 
@@ -91,9 +96,16 @@ const App = () => {
 
   const calculateTypingSpeed = (real) => {
     const wordsTyped = currWordIndex;
-    const timeInSeconds = (real ? SECONDS - countDownReal : SECONDS - countDown);
-    const typingSpeed = Math.round((wordsTyped / timeInSeconds) * 60);
-    return typingSpeed;
+  const timeInSeconds = (real ? SECONDS - countDownReal : SECONDS - countDown);
+  let typingSpeed;
+
+  if (timeInSeconds === 0) {
+    typingSpeed = Math.round((wordsTyped / SECONDS) * 60); // or some maximum value
+  } else {
+    typingSpeed = Math.round((wordsTyped / timeInSeconds) * 60);
+  }
+
+  return typingSpeed;
   };
 
   const calculateAccuracy = () => {
@@ -105,15 +117,21 @@ const App = () => {
 
   return (
     <div className="App">
+    <Card bg = "warning" style={{ width: '28rem', height: '28rem' }}>
+      <div className="section1">
+      <Card.Header><h1>Type Racer Game</h1></Card.Header></div>
       <div className="section">
-        <h1>Type Racer Game</h1>
         {status === 'not-started' && (
-          <button onClick={handleStartGame}>Start Game</button>
+          <Button variant="info" size="lg" onClick={handleStartGame} >Start Game</Button>
+          
         )}
+        
         {status === 'started' && (
           <div>
+          <div className="section1">
             <p>Time remaining: {countDown} seconds</p>
             <p>Type the following words:</p>
+            </div>
             <p>
               {words.map((word, index) => (
                 <span
@@ -140,23 +158,47 @@ const App = () => {
               autoFocus
               disabled={status !== 'started'}
               ref={textInput}
+              style={{ width: '26rem', height:'3rem', textAlign: 'center' }}
+              
             />
-            <p>Words typed: {currWordIndex}</p>
-            <p>Typing speed: {calculateTypingSpeed(false)}</p>
-            <p>Characters typed: {currCharIndex}</p>
+            
+            <Table striped  style={{ marginTop:'15px' }}
+              >
+      <thead>
+        <tr>
+          
+          <th>Words typed</th>
+          <th>{currWordIndex}</th>
+          
+        </tr>
+        <tr>
+          
+          <th>Typing speed</th>
+          <th>{calculateTypingSpeed(false)}</th>
+          
+        </tr>
+        <tr>
+          
+          <th>Characters typed</th>
+          <th>{currCharIndex}</th>
+          
+        </tr>
+      </thead>
+     </Table>
           </div>
         )}
         {status === 'finished' && (
-          <div>
+          <div >
             <p>Game finished!</p>
             <p>Typing speed: {calculateTypingSpeed(true)} words per minute</p>
             <p>Accuracy: {calculateAccuracy()}%</p>
             <p>Wrong words typed: {wrongWords.length}</p>
             <p>Wrong words: {wrongWords.join(', ')}</p>
-            <button onClick={handleStartGame}>Start Again</button>
+           <span className='replay-btn'> <Button variant="info" size="lg" onClick={handleStartGame}>Start Again</Button> </span>
           </div>
         )}
       </div>
+      </Card>
     </div>
   );
 };
