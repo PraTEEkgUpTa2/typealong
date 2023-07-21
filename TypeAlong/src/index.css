@@ -28,7 +28,7 @@ body {
 .section input:focus {
   border-color:rgba(6, 164, 232, 1);/* Border color when input is focused */
   outline: none; /* Remove the default browser outline */
-  box-shadow: 0 0 20px rgba(6, 164, 232, 1);
+  
   border-radius: 5px;
 }
 .section{
@@ -38,5 +38,5 @@ body {
   padding-top: 50px;
 }
 .replay-btn Button{
-  margin: 2rem 0 0 0;
+  margin: 2rem 0 0 3rem;
 }
